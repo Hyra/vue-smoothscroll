@@ -15,7 +15,7 @@
     "main": "dist/vue-smoothscroll.js",
     "repository": {
         "type": "git",
-        "url": "git@github.com:Teddy-Zhu/vue-smoothscroll.git"
+        "url": "git@github.com:Hyra/vue-smoothscroll.git"
     },
     "license": "MIT",
     "devDependencies": {
