@@ -128,66 +128,67 @@ return /******/ (function(modules) { // webpackBootstrap
 	// if the first argument is numeric then scroll to this location
 	// if the callback exist, it is called when the scrolling is finished
 	// if context is set then scroll that element, else scroll window
-	var smoothScroll = function(el, duration, callback, context){
-	    duration = duration || 500;
-	    context = context || window;
-	    var start = context.scrollTop || window.pageYOffset;
+	var smoothScroll = function(el, offset, duration, callback, context){
+    duration = duration || 500;
+    offset = offset || 0;
+    context = context || window;
+    var start = context.scrollTop || window.pageYOffset;
 
-	    if (typeof el === 'number') {
-	      var end = parseInt(el);
-	    } else {
-	      var end = getTop(el, start);
-	    }
+    if (typeof el === 'number') {
+      var end = parseInt(el) + offset;
+    } else {
+      var end = getTop(el, start) + offset;
+    }
 
-	    var clock = Date.now();
-	    var requestAnimationFrame = window.requestAnimationFrame ||
-	        window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
-	        function(fn){window.setTimeout(fn, 15);};
+    var clock = Date.now();
+    var requestAnimationFrame = window.requestAnimationFrame ||
+        window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
+        function(fn){window.setTimeout(fn, 15);};
 
-	    var step = function(){
-	        var elapsed = Date.now() - clock;
-	        if (context !== window) {
-	          context.scrollTop = position(start, end, elapsed, duration);
-	        }
-	        else {
-	          window.scroll(0, position(start, end, elapsed, duration));
-	        }
+    var step = function(){
+        var elapsed = Date.now() - clock;
+        if (context !== window) {
+          context.scrollTop = position(start, end, elapsed, duration);
+        }
+        else {
+          window.scroll(0, position(start, end, elapsed, duration));
+        }
 
-	        if (elapsed > duration) {
-	            if (typeof callback === 'function') {
-	                callback(el);
-	            }
-	        } else {
-	            requestAnimationFrame(step);
-	        }
-	    }
-	    step();
-	}
+        if (elapsed > duration) {
+            if (typeof callback === 'function') {
+                callback(el);
+            }
+        } else {
+            requestAnimationFrame(step);
+        }
+    }
+    step();
+}
 
-	var linkHandler = function(ev) {
-	    ev.preventDefault();
+var linkHandler = function(ev) {
+    ev.preventDefault();
 
-	    if (location.hash !== this.hash) window.history.pushState(null, null, this.hash)
-	    // using the history api to solve issue #1 - back doesn't work
-	    // most browser don't update :target when the history api is used:
-	    // THIS IS A BUG FROM THE BROWSERS.
-	    // change the scrolling duration in this call
-	    var node = document.getElementById(this.hash.substring(1))
-	    if(!node) return; // Do not scroll to non-existing node
+    if (location.hash !== this.hash) window.history.pushState(null, null, this.hash)
+    // using the history api to solve issue #1 - back doesn't work
+    // most browser don't update :target when the history api is used:
+    // THIS IS A BUG FROM THE BROWSERS.
+    // change the scrolling duration in this call
+    var node = document.getElementById(this.hash.substring(1))
+    if(!node) return; // Do not scroll to non-existing node
 
-	    smoothScroll(node, 500, function(el) {
-	        location.replace('#' + el.id)
-	        // this will cause the :target to be activated.
-	    });
-	}
+    smoothScroll(node, 500, function(el) {
+        location.replace('#' + el.id)
+        // this will cause the :target to be activated.
+    });
+}
 
-	// We look for all the internal links in the documents and attach the smoothscroll function
-	document.addEventListener("DOMContentLoaded", function () {
-	    var internal = document.querySelectorAll('a[href^="#"]:not([href="#"])'), a;
-	    for(var i=internal.length; a=internal[--i];){
-	        a.addEventListener("click", linkHandler, false);
-	    }
-	});
+// We look for all the internal links in the documents and attach the smoothscroll function
+document.addEventListener("DOMContentLoaded", function () {
+    var internal = document.querySelectorAll('a.scroll[href^="#"]:not([href="#"])'), a;
+    for(var i=internal.length; a=internal[--i];){
+        a.addEventListener("click", linkHandler, false);
+    }
+});
 
 	// return smoothscroll API
 	return smoothScroll;
