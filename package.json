@@ -13,10 +13,6 @@
     },
     "readme": "README.md",
     "main": "dist/vue-smoothscroll.js",
-    "repository": {
-        "type": "git",
-        "url": "git@github.com:Hyra/vue-smoothscroll.git"
-    },
     "license": "MIT",
     "devDependencies": {
     },
